@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Truffle Webpack Oraclize ÐAPP w/ Frontend & Coinbase API communication.</title>
+
+  <script src="./app.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+</head>
+
+<body>
+  <div id="container">
+    <h1 id="title">Oraclize</h1>
+    <h2> ÐApp</h2>
+
+    <div id="row">
+      <div class="yellow">
+        <h3>ÐAPP BALANCE</h3>
+
+        <span><h1 id="balance">0.000000</h1> ETH</span>
+      </div>
+
+      <div class="dark">
+        <h3>USD VALUE</h3>
+        <span><h1 id="total">0.00</h1> USD</span>
+      </div>
+    </div>
+
+    <span id="status"></span>
+
+    <br />
+
+    <div class="hint">
+      <div><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</div>
+      <div><strong>ETH/USD</strong> rates from <a href="https://api.coinbase.com/v2/prices/ETH-USD/spot">Coinbase</a>.</div>
+
+      <div><strong>Made by:</strong> <a href="https://twitter.com/WWWillems">WWWillems</a></div>
+    </div>
+  </div>
+</body>
+</html>
