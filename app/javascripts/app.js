@@ -1,19 +1,18 @@
-// Import the page's CSS. Webpack will know what to do with it.
+// Import the page's CSS. Webpack will know what to do with it,
+// as it's been configured by truffle-webpack
 import "../stylesheets/app.css";
 
 // Import libraries we need.
 import { default as Web3} from 'web3';
-import { default as contract } from 'truffle-contract'
+import { default as contract } from 'truffle-contract';
 
 // Import our contract artifacts and turn them into usable abstractions.
-import contract_build_artifacts from '../../build/contracts/OraclizeTest.json'
+// Make sure you've ran truffle compile first
+import contract_build_artifacts from '../../build/contracts/OraclizeTest.json';
 
-// MetaCoin is our usable abstraction, which we'll use through the code below.
+// OraclizeContract is our usable abstraction, which we'll use through the code below.
 var OraclizeContract = contract(contract_build_artifacts);
 
-// The following code is simple to show off interacting with your contracts.
-// As your needs grow you will likely need to change its form and structure.
-// For application bootstrapping, check out window.addEventListener below.
 var accounts;
 var account;
 
@@ -21,6 +20,7 @@ window.App = {
   currentBalance: 0,
   ethPriceinUSD: 0,
 
+  // 'Constructor'
   start: function() {
     var self = this;
 
@@ -46,11 +46,13 @@ window.App = {
     });
   },
 
+  // Show an error
   setStatus: function(message) {
     var status = document.getElementById("status");
     status.innerHTML = message;
   },
 
+  // Opens a socket and listens for Events defined in our contract.
   addEventListeners: function(instance){
     var LogCreated = instance.LogUpdate({},{fromBlock: 0, toBlock: 'latest'});
     var LogPriceUpdate = instance.LogPriceUpdate({},{fromBlock: 0, toBlock: 'latest'});
@@ -61,10 +63,11 @@ window.App = {
         App.ethPriceinUSD = result.args.price;
         App.showBalance(App.ethPriceinUSD, App.currentBalance);
       }else{
-        console.log(err)
+        console.log(err);
       }
     })
 
+    // Emitted when the Contract's constructor is run
     LogCreated.watch(function(err, result){
       if(!err){
         console.log('Contract created!');
@@ -72,15 +75,16 @@ window.App = {
         console.log('Balance: ' , web3.fromWei(result.args._balance, 'ether').toString(), 'ETH');
         console.log('-----------------------------------');
       }else{
-        console.log(err)
+        console.log(err);
       }
     })
 
+    // Emitted when a text message needs to be logged to the front-end from the Contract
     LogInfo.watch(function(err, result){
       if(!err){
-        console.info(result.args)
+        console.info(result.args);
       }else{
-        console.error(err)
+        console.error(err);
       }
     })
   },
@@ -106,12 +110,15 @@ window.App = {
   },
 
   showBalance: function(price, balance){
+    // Balance updated, start CSS animation
     var row = document.getElementById('row');
     row.style.animation = 'heartbeat 0.75s';
+
+    // Removes CSS animation after 1000 ms
     setTimeout(function(row){
       var row = document.getElementById('row');
       row.style.animation = null;
-    }, 1100)
+    }, 1000)
 
     var balance_element = document.getElementById("balance");
     // Rounding can be more precise, this is just an example
@@ -122,6 +129,7 @@ window.App = {
   }
 };
 
+// Front-end entry point
 window.addEventListener('load', function() {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
@@ -134,5 +142,6 @@ window.addEventListener('load', function() {
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:9545"));
   }
 
+  // All systems go, start App!
   App.start();
 });
